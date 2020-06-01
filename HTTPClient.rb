@@ -44,8 +44,8 @@ class HTTPClient
 
 	def handleCommand 
 		loop do
-			command="none"
-			parameter="none"
+			command=''
+			parameter=''
 			input=gets.chomp
 			input=input.split(" ")
 			command=input[0]
@@ -87,11 +87,8 @@ class HTTPClient
 				end
 				@communication.deleteUser(parameter)
 
-			elsif command=='ls'
-				if not input.length==2
-					puts "You must provide path"
-					next
-				end
+			elsif command=='ls' and [1,2].include?(input.length)
+				
 				resp=@communication.getDir(parameter)
 				if resp==-1
 					next

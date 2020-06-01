@@ -21,7 +21,7 @@ end
 
 def getDirRequest(auth_code,folder, info)
 	q=<<~HEREDOC
-	GET /dir#{folder}?info=#{info} HTTP/1.1\r
+	GET /dir/#{folder}?info=#{info} HTTP/1.1\r
 	Authorization: #{auth_code}\r\n\r\n
 	HEREDOC
 	return q

@@ -21,7 +21,7 @@ class UserInterface
     4. addusr       - Add new user
     5. rmusr {id}   - Delete user with id given as parameter
     6. chngusr {id} - Change user with id given as parameter
-    7. ls {dir}     - Check conntent of the server. "/" for seeing root
+    7. ls {dir}     - Check conntent of the server. Do not type path for seeing root
     8. exit         - Exit from the program
     9. help         - See all available options
     Choose option by typing the command
