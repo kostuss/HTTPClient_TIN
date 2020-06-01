@@ -1,8 +1,7 @@
-###Http requests###
+###Deffinitions of HTTP requests used by SSLCommunication module###
 require 'json'
 
 def authorizeRequest(username, password)
-	#{"username":"superuser","password":"AdMiNiStRaToR1@3"}
 	q=<<~HEREDOC
 	POST /authorize HTTP/1.1\r
 	\r
@@ -12,7 +11,6 @@ def authorizeRequest(username, password)
 end
 
 def logOutRequest(username, password)
-	#{"username":"superuser","password":"AdMiNiStRaToR1@3"}
 	q=<<~HEREDOC
 	POST /authorize HTTP/1.1\r
 	\r
@@ -97,10 +95,8 @@ end
 
 
 if __FILE__ == $0
-	#puts({:user => "BOLEK", :password => "BOLEK"}.to_json)
-	puts createUserRequest("1234", "BOLEK", "PASS", "JAN", "KOWALSKI", '1' )
+
 end
-#puts createUserRequest("BOLEK", "PASS", "1234")
 
 
 

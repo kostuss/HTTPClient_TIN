@@ -1,3 +1,4 @@
+## File for starting application ##
 require_relative 'HTTPClient'
 
 if __FILE__ == $0

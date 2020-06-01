@@ -1,3 +1,5 @@
+##HTTPS Client application ##
+
 require_relative 'SSLCommunication'
 require_relative 'UserInterface'
 
@@ -101,14 +103,13 @@ class HTTPClient
 				break	
 			else
 				puts "Undefined command"
-
 		    end	
 		end
 	end
 end
 
 if __FILE__ == $0
-  client=HttpClient.new
-  client.startClient
+  #client=HttpClient.new
+  #client.startClient
 end
 

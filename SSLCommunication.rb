@@ -1,3 +1,7 @@
+###Module for handling communication with the server###
+#Protocol: HTTP
+#Communication: TCP Socket
+#Communiation secured with SSL
 require 'openssl'
 require 'socket'
 require 'json'

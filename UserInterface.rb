@@ -1,3 +1,4 @@
+##Module for handling communication with the user##
 class UserInterface
 
   def initialize(io=$stdout)
