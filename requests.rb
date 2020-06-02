@@ -124,10 +124,6 @@ def postDirRequest(folder, auth_code)
 	return q
 end 
 
-###TODO   uwazac na content length 
-def postFileRequest(auth_code, file, content)
-	
-end 
 
 
 if __FILE__ == $0

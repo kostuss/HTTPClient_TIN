@@ -232,30 +232,6 @@ class SSLCommunication
 		end 
 	end
 
-	def getFile(file)
-		
-		resp=requestSocket(getFileRequest(file))
-		status=response_status(resp)
-
-		if status=="200"
-			len=response_length(resp)
-			puts "You've downloaded: #{len} bytes"
-			return response_body(resp), response_header(resp)
-		elsif status=="404"
-			puts "404 Not found"
-			return -1
-		elsif status=="500"
-			puts "500 Something went wrong"
-			return -2		
-		end 
-	end
-
-	def writeFile(file, content)
-		open(file, 'w') do |f|
-	  		f.puts content
-		end
-	end 
-
 	def set_auth_code(response)
 		headers =response.split("\r\n\r\n", 2)[0]
 		headers =headers.split("\n")
