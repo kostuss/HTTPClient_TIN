@@ -10,6 +10,14 @@ def authorizeRequest(username, password)
 	return q
 end
 
+def prolongRequest(auth_code)
+	q=<<~HEREDOC
+	POST /prolong-session HTTP/1.1\r
+	Authorization: #{auth_code}\r\n\r\n
+	HEREDOC
+	return q
+end
+
 def logOutRequest(username, password)
 	q=<<~HEREDOC
 	POST /authorize HTTP/1.1\r
@@ -29,7 +37,8 @@ end
 
 def createUserRequest(auth_code, credentials)
 
-	body={:username => credentials[0], :password => credentials[1], :first_name => credentials[2], :last_name => credentials[3], :role => credentials[4]}.to_json
+	body=generate_body(credentials)
+	#body={:username => credentials[0], :password => credentials[1], :first_name => credentials[2], :last_name => credentials[3], :role => credentials[4]}.to_json
 	len=body.length
 	q=<<~HEREDOC
 	POST /users HTTP/1.1\r
@@ -42,8 +51,9 @@ def createUserRequest(auth_code, credentials)
 end
 
 def changeUserRequest(auth_code,id,credentials)
-
-	body={:username => credentials[0], :password => credentials[1], :first_name => credentials[2], :last_name => credentials[3], :role => credentials[4]}.to_json
+	
+	body=generate_body(credentials)
+	#body={ :password => credentials[1], :first_name => credentials[2], :last_name => credentials[3], :role => credentials[4]}.to_json
 	len=body.length
 	q=<<~HEREDOC
 	PATCH /users/#{id} HTTP/1.1\r
@@ -55,9 +65,28 @@ def changeUserRequest(auth_code,id,credentials)
 	return q
 end
 
+def generate_body(credentials)
+	hash1={}
+	keys=["username","password","first_name","last_name","role"]
+	credentials.zip(keys).each do |credentials, key|
+		if credentials!=''
+			hash1[key]=credentials
+		end
+	end
+	return hash1.to_json
+end
+
 def getUserRequest(auth_code)
 	q=<<~HEREDOC
-	GET /users?limit=3&offset=2 HTTP/1.1\r
+	GET /users HTTP/1.1\r
+	Authorization: #{auth_code}\r\n\r\n
+	HEREDOC
+	return q
+end
+
+def getOneUserRequest(auth_code)
+	q=<<~HEREDOC
+	GET /users?limit=1&offset=0 HTTP/1.1\r
 	Authorization: #{auth_code}\r\n\r\n
 	HEREDOC
 	return q
@@ -67,6 +96,13 @@ def deleteUserRequest(auth_code, id)
 	q=<<~HEREDOC
 	DELETE /users/#{id} HTTP/1.1\r
 	Authorization: #{auth_code}\r\n\r\n
+	HEREDOC
+	return q
+end
+
+def generate500Request
+	q=<<~HEREDOC
+	POST /produce-exception HTTP/1.1\r\n\r\n
 	HEREDOC
 	return q
 end
