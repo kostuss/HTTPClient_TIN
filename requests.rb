@@ -38,7 +38,6 @@ end
 def createUserRequest(auth_code, credentials)
 
 	body=generate_body(credentials)
-	#body={:username => credentials[0], :password => credentials[1], :first_name => credentials[2], :last_name => credentials[3], :role => credentials[4]}.to_json
 	len=body.length
 	q=<<~HEREDOC
 	POST /users HTTP/1.1\r
@@ -53,7 +52,6 @@ end
 def changeUserRequest(auth_code,id,credentials)
 	
 	body=generate_body(credentials)
-	#body={ :password => credentials[1], :first_name => credentials[2], :last_name => credentials[3], :role => credentials[4]}.to_json
 	len=body.length
 	q=<<~HEREDOC
 	PATCH /users/#{id} HTTP/1.1\r
@@ -124,11 +122,6 @@ def postDirRequest(folder, auth_code)
 	return q
 end 
 
-
-
 if __FILE__ == $0
 
 end
-
-
-

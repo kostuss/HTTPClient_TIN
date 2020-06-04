@@ -61,40 +61,13 @@ class SSLCommunication
 		end 
 	end
 
-	def requestSocket1(request)
-		begin
-			attempts = attempts || 0
-			@ssl_socket.syswrite request
-
-			resp=@ssl_socket.sysread(1024)
-			body_len=resp.split("\r\n\r\n", 2)[1].length
-			#puts body_len
-			#puts content_length(resp)
-			if body_len<content_length(resp).to_i
-				puts "2"
-				puts content_length(resp).to_i-body_len
-				resp1=@ssl_socket.sysread(15360)
-				puts resp1.length
-				resp2=@ssl_socket.sysread(15360)
-				puts resp2.length
-			end
-
-			return resp
-		rescue EOFError, NoMethodError
-			attempts+=1
-			@ssl_socket=getSocket()
-			retry if attempts<@retry_limit
-			raise "Unable to read from server"
-		end 
-	end
-
 	def authorize(username, password)
 		
 		resp =requestSocket(authorizeRequest(username, password))
 		status=response_status(resp)
 		if status=="200"
 			set_auth_code(resp)
-		elsif ["400", "401","404"].include?(status)
+		elsif ["400", "401","403","404"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
 			raise "Something went wrong with the server during authorization"
@@ -109,7 +82,7 @@ class SSLCommunication
 		status=response_status(resp)
 		if status=="200"
 			set_auth_code(resp)
-		elsif ["400", "401","404"].include?(status)
+		elsif ["400", "401","403","404"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
 			raise "Something went wrong with the server during authorization"
@@ -128,7 +101,7 @@ class SSLCommunication
 		status=response_status(resp)
 		if status=="200"
 			#DONOTHING
-		elsif ["400", "401","404"].include?(status)
+		elsif ["400", "401","403","404"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
 			raise "Something went wrong with the server while creating user"
@@ -144,7 +117,7 @@ class SSLCommunication
 		
 		if status=="200"
 			#puts "User #{credentials[0]} changed :)"
-		elsif ["400", "401","404","405"].include?(status)
+		elsif ["400", "401","403","404","405"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
 			raise "Something went wrong with the server while changing user"
@@ -162,11 +135,12 @@ class SSLCommunication
 		out[0]=status
 		if status=="200"
 			out[1]=response_body(resp)
-		elsif ["400", "401","404"].include?(status)
+		elsif ["400", "401","403","404"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
 			raise "Something went wrong with the server while checking users"
 		else
+			puts status+response_body(resp)
 			raise"Undefined error"
 		end	
 
@@ -178,7 +152,7 @@ class SSLCommunication
 		status=response_status(resp)
 		if status=="200"
 			#puts "User deleted :)"
-		elsif ["400", "401","404", "405"].include?(status)
+		elsif ["400", "401","403","404","405"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
 			raise "Something went wrong with the server while deleting user"
@@ -196,7 +170,7 @@ class SSLCommunication
 		if status=="200"
 			#return response_body(resp)
 			out[1]=response_body(resp)
-		elsif ["400", "401","404"].include?(status)
+		elsif ["400", "401","403","404"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
 			raise "Something went wrong with the server while listing directory"
@@ -211,9 +185,9 @@ class SSLCommunication
 		status=response_status(resp)
 		if status=="200"
 			return response_body(resp)
-		elsif ["400", "401"].include?(status)
+		elsif ["400", "401","404"].include?(status)
 			puts response_status(resp)
-		elsif status=="404"
+		elsif status=="500"
 			raise "Something went wrong with the server while testing 500"
 		else
 			raise "Undefined error"
@@ -276,7 +250,7 @@ if __FILE__ == $0
 	begin
 		communication=SSLCommunication.new
 		communication.authorize("kostuss16","Damian123")
-		communication.decode_auth
+		communication.generate500
 
 	rescue Errno::ENETUNREACH => e
 		puts e

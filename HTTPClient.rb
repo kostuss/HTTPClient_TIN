@@ -1,4 +1,5 @@
 ##HTTPS Client application ##
+## Module implementing console application with  the use of SSLCommunication and UserInterface module ##
 
 require_relative 'SSLCommunication'
 require_relative 'UserInterface'
@@ -28,9 +29,10 @@ class HTTPClient
 	end
 
 	def prolongCheck
-		left=@communication.remaining_time
-		if left<300
-			puts "Remaining session time: #{left.round(0)} seconds"
+		left=@communication.remaining_time/60
+		left=left.to_i
+		if left<15
+			puts "Remaining session time: #{left.round(0)} minutes"
 		end
 	end
 
@@ -95,7 +97,7 @@ class HTTPClient
 					end
 					prolongCheck()
 						
-				elsif resp[0]=='401'
+				elsif ['401','403'].include?(resp[0])  
 					puts "Login as administrator."
 				elsif resp[0]=='404'
 					puts "Not found"
@@ -112,7 +114,7 @@ class HTTPClient
 					prolongCheck
 				elsif resp == '400'
 					puts "Give valid credentails"
-				elsif resp=='401'
+				elsif ['401','403'].include?(resp)  
 					puts "Login as administrator."
 				elsif resp=='404'
 					puts "Not found"
@@ -131,7 +133,7 @@ class HTTPClient
 				if resp=='200'
 					puts "User changed"
 					prolongCheck()
-				elsif resp=='401'
+				elsif ['401','403'].include?(resp)  
 					puts "Login as administrator."
 				elsif resp=='404'
 					puts "Check the users with lsusr"
@@ -148,7 +150,7 @@ class HTTPClient
 				if resp=='200'
 					puts "User deleted"
 					prolongCheck
-				elsif resp=='401'
+				elsif ['401','403'].include?(resp)  
 					puts "Login as administrator."
 				elsif resp=='404'
 					puts "Not found"
@@ -157,7 +159,6 @@ class HTTPClient
 				end
 
 			elsif command=='ls' and [1,2].include?(input.length)
-				
 				resp=@communication.getDir(parameter)
 
 				if resp[0]=='200'
