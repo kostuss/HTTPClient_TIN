@@ -15,8 +15,8 @@ class SSLCommunication
 		@port=port
 		@ssl_socket=getSocket
 		@retry_limit=retry_limit
-		@auth_code="None"
-		@expire_time="None"
+		@auth_code=nil
+		@expire_time=nil
 	end
 
 	def getSocket
@@ -93,7 +93,8 @@ class SSLCommunication
 	end
 
 	def logOut
-		@auth_code="None"						
+		@auth_code=nil
+		@expire_time=nil						
 	end 
 
 	def createUser(credentials)
@@ -116,7 +117,7 @@ class SSLCommunication
 		status=response_status(resp)
 		
 		if status=="200"
-			#puts "User #{credentials[0]} changed :)"
+			#DONOTHING
 		elsif ["400", "401","403","404","405"].include?(status)
 			puts response_body(resp)
 		elsif status=="500"
@@ -130,7 +131,6 @@ class SSLCommunication
 	def getUsers
 		resp =requestSocket(getUserRequest(@auth_code))
 		status=response_status(resp)
-		#puts resp
 		out=[]
 		out[0]=status
 		if status=="200"
@@ -143,7 +143,6 @@ class SSLCommunication
 			puts status+response_body(resp)
 			raise"Undefined error"
 		end	
-
 		return out
 	end
 
@@ -168,7 +167,6 @@ class SSLCommunication
 		out=[]
 		out[0]=status
 		if status=="200"
-			#return response_body(resp)
 			out[1]=response_body(resp)
 		elsif ["400", "401","403","404"].include?(status)
 			puts response_body(resp)
