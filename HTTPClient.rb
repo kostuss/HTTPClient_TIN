@@ -67,7 +67,6 @@ class HTTPClient
 
 			elsif command=='login' and input.length==1
 				username, password = @interface.logIn
-				#@communication.authorize("superuser","AdMiNiStRaToR1@3")
 				status=@communication.authorize(username,password)
 				if status=='200'
 					puts "User #{username} logged successfully."
